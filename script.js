@@ -1,5 +1,4 @@
 
-
 // OPTIONS DE LA API
 const apiOptions = {
   method: 'GET',
@@ -8,6 +7,27 @@ const apiOptions = {
     Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwZGY2MzkwMzUxN2E0YTUwNTA5ZGViOTAxZjgzODk3YyIsInN1YiI6IjYxYjZjMWVhYzk5NWVlMDA0MjUxNTdiMyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.G8KkdOspFQZuvVyHp4jQvyiYCBhqybx8TeShkqWYZT4'
   }
 };
+
+// OBTENER LENGUAJES
+const opcionesIdioma = document.getElementById('idioma');
+const usuarioIdioma = navigator.language.split('-')[0];
+
+fetch('https://api.themoviedb.org/3/configuration/languages', apiOptions)
+  .then(response => response.json())
+  .then(languages => {
+    languages.forEach(language => {
+      const option = document.createElement('option');
+      option.value = language.iso_639_1;
+      option.textContent = language.english_name || language.name;
+
+      // Selecciona automáticamente la opción del idioma del sistema
+      if (language.iso_639_1 === usuarioIdioma) {
+        option.selected = true;
+      }
+      opcionesIdioma.appendChild(option);
+    });
+  })
+  .catch(err => console.error(err));
 
 // OBTENER EL GENERO DE LAS PELICULAS
 // Retorna un array, para poder hacer las referencias al obtener las peliculas
@@ -32,11 +52,12 @@ async function obtenerPeliculasPopulares() {
     contenedorPeliculas.removeChild(contenedorPeliculas.firstChild);
   }
 
-  var idioma = document.getElementById("idioma").value;
-  var pagina = 1;
+
 
   try {
     const nombreGeneros = await obtenerGeneros();
+    var idioma = document.getElementById("idioma").value;
+    var pagina = 1;
 
     const response = await fetch(`https://api.themoviedb.org/3/movie/popular?language=${idioma}&page=${pagina}`, apiOptions);
     const responseData = await response.json();
@@ -91,16 +112,3 @@ function mostrarPeliculas(popularMovies) {
     contenedorPeliculas.appendChild(card);
   });
 }
-
-[
-  {
-    "iso_639_1": "xx",
-    "english_name": "No Language",
-    "name": "No Language"
-  },
-  {
-    "iso_639_1": "aa",
-    "english_name": "Afar",
-    "name": ""
-  }
-]

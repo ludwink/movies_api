@@ -10,20 +10,22 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
-    <script src="script.js"></script>
     <title>Películas</title>
   </head>
   <body>
     <nav>
       <h2 class="logo"><a href="index.html">PELICULAS</a></h2>
-      <button onclick="obtenerPeliculasPopulares()">Populares</button>
+      <button onclick="obtenerPeliculasPopulares()">
+        <img src="search.png" alt="Buscar" class="search-icon" />Populares
+      </button>
       <select id="idioma">
-        <option value="es">Español</option>
-        <option value="en">Inglés</option>
+        <!-- <option value="es">Español</option>
+        <option value="en">Inglés</option> -->
       </select>
     </nav>
     <main>
       <div class="contenedorPeliculas" id="contenedorPeliculas"></div>
     </main>
+    <script src="script.js"></script>
   </body>
 </html>

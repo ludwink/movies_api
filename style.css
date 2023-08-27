@@ -29,12 +29,6 @@ p {
   font-size: var(--text-size);
 }
 
-h2 {
-  font-family: var(--title-font);
-  font-weight: 550;
-  letter-spacing: 10;
-}
-
 .logo a {
   font-size: 35px;
   letter-spacing: 4px;
@@ -60,16 +54,29 @@ nav {
 #idioma {
   background-color: var(--secondary-bg-color);
   padding: 5px;
+  border: var(--primary-color) 2px solid;
+  border-radius: 20px;
+  font-size: 1rem;
 }
 
 button {
   background-color: var(--secondary-bg-color);
-  padding: 5px;
   border: transparent;
-  font-size: 1.5rem;
   border-radius: 20px;
-  padding: 5px 15px;
-  font-weight: 500;
+  padding: 5px 10px;
+  font-size: 1rem;
+  border: var(--primary-color) 2px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-icon {
+  height: 25px;
+  background-color: var(--primary-color);
+  border-radius: 20px;
+  padding: 3px;
+  margin-right: 5px;
 }
 
 button:hover {
@@ -92,12 +99,11 @@ button:hover {
   flex: 1 1 calc(20% - 20px);
   margin: 10px;
   display: flex;
-  flex-direction: column;
-  overflow: hidden;
   height: 400px;
 }
 
 .overlay {
+  overflow: hidden;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -133,7 +139,6 @@ button:hover {
   .card {
     flex: 1 1 calc(25% - 20px);
   }
-
   .overlay {
     height: 100%;
   }
