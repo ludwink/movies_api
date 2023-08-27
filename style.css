@@ -1,0 +1,58 @@
+/* Root */
+:root {
+  --primary-color: #fcc63d;
+
+  --primary-bg-color: #14161e;
+  --secondary-bg-color: #1a1d27;
+
+  --title-font: "Bebas Neue", sans-serif;
+  --text-font: "Open Sans", sans-serif;
+  --title-size: 75px;
+  --subtitle-size: 35px;
+  --tercer-subtitle: 25px;
+
+  --text-size: 18px;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: var(--text-font);
+}
+
+body {
+  background-color: var(--primary-bg-color);
+  padding-top: 70px;
+}
+
+h1,
+h2 {
+  font-family: var(--title-font);
+}
+
+.logo {
+  color: var(--primary-color);
+  font-size: var(--subtitle-size);
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.logo a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-family: var(--title-font);
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 8%;
+  top: 0;
+  position: fixed;
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 100%;
+  z-index: 1;
+}

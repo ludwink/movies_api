@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Películas</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <nav>
+      <h2 class="logo"><a href="index.html">PELICULAS</a></h2>
+      <select id="idioma">
+        <option value="es-ES">Español</option>
+        <option value="en-US">Inglés</option>
+      </select>
+    </nav>
+
+    <main>
+      <div class="contenedorPeliculas">
+        <div class="card"></div>
+      </div>
+    </main>
+    <button onclick="obtenerPeliculasPopulares()">PELICULAS</button>
+    <button onclick="obtenerGeneroPelicula()">GENEROS</button>
+    <button onclick="test()">TEST FUNC</button>
+  </body>
+</html>
