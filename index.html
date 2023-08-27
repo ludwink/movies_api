@@ -15,8 +15,14 @@
   <body>
     <nav>
       <h2 class="logo"><a href="index.html">PELICULAS</a></h2>
-      <button onclick="obtenerPeliculasPopulares()">
-        <img src="search.png" alt="Buscar" class="search-icon" />Populares
+      <button onclick="obtenerPeliculasPopulares('inicio')">
+        <img src="home.png" alt="Buscar" class="btnIcon" />
+      </button>
+      <button onclick="obtenerPeliculasPopulares('anterior')">
+        <img src="return.png" alt="Anterior" class="btnIcon" />
+      </button>
+      <button onclick="obtenerPeliculasPopulares('siguiente')">
+        <img src="next.png" alt="Siguiente" class="btnIcon" />
       </button>
       <select id="idioma">
         <!-- <option value="es">Español</option>

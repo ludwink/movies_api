@@ -71,12 +71,11 @@ button {
   align-items: center;
 }
 
-.search-icon {
+.btnIcon {
   height: 25px;
   background-color: var(--primary-color);
   border-radius: 20px;
-  padding: 3px;
-  margin-right: 5px;
+  padding: 5px;
 }
 
 button:hover {
@@ -103,6 +102,7 @@ button:hover {
 }
 
 .overlay {
+  max-height: 400px;
   overflow: hidden;
   position: absolute;
   bottom: 0;

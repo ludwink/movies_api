@@ -20,7 +20,7 @@ fetch('https://api.themoviedb.org/3/configuration/languages', apiOptions)
       option.value = language.iso_639_1;
       option.textContent = language.english_name || language.name;
 
-      // Selecciona automáticamente la opción del idioma del sistema
+      // Selecciona la opción del idioma del sistema
       if (language.iso_639_1 === usuarioIdioma) {
         option.selected = true;
       }
@@ -45,20 +45,28 @@ async function obtenerGeneros() {
 }
 
 // OBTENER PELICULAS POPULARES
-async function obtenerPeliculasPopulares() {
+var pagina = 1;
+async function obtenerPeliculasPopulares(accion) {
+  if (accion === "inicio") {
+    pagina = 1;
+  } else if (accion === "siguiente") {
+    pagina++;
+  } else if (accion === "anterior" && pagina > 1) {
+    pagina--;
+  } else {
+    console.error("Acción no válida");
+    return;
+  }
+
   // Eliminar peliculas anteriores
   var contenedorPeliculas = document.getElementById("contenedorPeliculas");
   while (contenedorPeliculas.firstChild) {
     contenedorPeliculas.removeChild(contenedorPeliculas.firstChild);
   }
 
-
-
   try {
     const nombreGeneros = await obtenerGeneros();
     var idioma = document.getElementById("idioma").value;
-    var pagina = 1;
-
     const response = await fetch(`https://api.themoviedb.org/3/movie/popular?language=${idioma}&page=${pagina}`, apiOptions);
     const responseData = await response.json();
 
@@ -78,6 +86,9 @@ async function obtenerPeliculasPopulares() {
     console.error(error);
   }
 }
+
+// CARGAR PELICULAS AL INICIO
+obtenerPeliculasPopulares("inicio");
 
 // MOSTRAR LAS PELICULAS EN EL HTML
 function mostrarPeliculas(popularMovies) {
