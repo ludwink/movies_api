@@ -37,6 +37,7 @@ async function obtenerGeneros() {
   }
 }
 
+// OBTENER PELICULAS POPULARES
 async function obtenerPeliculasPopulares() {
   const popularMoviesOptions = {
     method: 'GET',
@@ -78,28 +79,29 @@ function mostrarPeliculas(popularMovies) {
   popularMovies.forEach(movie => {
     const card = document.createElement('div');
     card.className = 'card';
+    card.style.backgroundImage = `url('https://image.tmdb.org/t/p/w500/${movie.poster_path}')`;
+    //card.style.backgroundImage = `url('https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg')`;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'overlay';
 
     const title = document.createElement('h2');
     title.textContent = movie.title;
-    card.appendChild(title);
+    overlay.appendChild(title);
 
     const releaseDate = document.createElement('h3');
-    releaseDate.textContent = `Fecha estreno: ${movie.release_date}`;
-    card.appendChild(releaseDate);
+    releaseDate.textContent = `${movie.release_date}`;
+    overlay.appendChild(releaseDate);
 
     const genreNames = document.createElement('h4');
-    genreNames.textContent = `Género: ${movie.genre_names.join(', ')}`;
-    card.appendChild(genreNames);
+    genreNames.textContent = `${movie.genre_names.join(', ')}`;
+    overlay.appendChild(genreNames);
 
     const overview = document.createElement('p');
     overview.textContent = movie.overview;
-    card.appendChild(overview);
+    overlay.appendChild(overview);
 
-    const posterPath = document.createElement('img');
-    posterPath.src = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`;
-    posterPath.alt = movie.title;
-    card.appendChild(posterPath);
-
+    card.appendChild(overlay);
     contenedorPeliculas.appendChild(card);
   });
 }

@@ -1,17 +1,13 @@
 /* Root */
 :root {
-  --primary-color: #fcc63d;
+  --primary-color: #12f601;
 
-  --primary-bg-color: #14161e;
-  --secondary-bg-color: #1a1d27;
+  --primary-bg-color: #000;
+  --secondary-bg-color: #0d161c;
 
   --title-font: "Bebas Neue", sans-serif;
   --text-font: "Open Sans", sans-serif;
-  --title-size: 75px;
-  --subtitle-size: 35px;
-  --tercer-subtitle: 25px;
-
-  --text-size: 18px;
+  --text-size: 15px;
 }
 
 * {
@@ -27,19 +23,14 @@ body {
   padding-top: 70px;
 }
 
-h1,
-h2 {
-  font-family: var(--title-font);
-}
-
-.logo {
-  color: var(--primary-color);
-  font-size: var(--subtitle-size);
-  letter-spacing: 1px;
-  cursor: pointer;
+p {
+  font-size: var(--text-size);
 }
 
 .logo a {
+  font-size: 35px;
+  letter-spacing: 4px;
+  cursor: pointer;
   color: var(--primary-color);
   text-decoration: none;
   font-family: var(--title-font);
@@ -59,19 +50,59 @@ nav {
 }
 
 #idioma {
-  color: black;
+  background-color: var(--secondary-bg-color);
+  padding: 5px;
 }
 
 button {
-  color: black;
+  background-color: var(--secondary-bg-color);
+  padding: 5px;
+}
+
+.contenedorPeliculas {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .card {
+  position: relative;
+  flex: 1 1 calc(20% - 20px);
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   height: 400px;
-  width: 300px;
+
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.poster_path {
-  height: 250px;
-  width: 200px;
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover .overlay {
+  opacity: 1;
+}
+
+/* Estilos para telefonos */
+@media (max-width: 768px) {
+  .card {
+    flex: 1 1 calc(50% - 20px);
+  }
+}
+
+/* Estilos para tablet */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .card {
+    flex: 1 1 calc(25% - 20px);
+  }
 }
