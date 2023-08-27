@@ -1,34 +1,21 @@
 
-// FUNCION PARA OBTENER LOS GENEROS EN INGLES O ESPAÑOL
-// DEBIDO A QUE EN LA URL DEL GENERO EL IDIOMA SE DEFINE COMO "es" o "en"
-// Y EN LA URL DE PELICULAS POPULARES SE DEFINE COMO "es-ES" o "en-US"
-// Y EN EL HTML LOS VALUES DEL SELECT ESTAN "es-ES" y "en-US"
-function idiomaGenero() {
-  var idioma = document.getElementById("idioma").value;
-  var idiomaGenero = "";
 
-  if (idioma === "en-US") {
-    idiomaGenero = "en";
-  } else if (idioma === "es-ES") {
-    idiomaGenero = "es";
+// OPTIONS DE LA API
+const apiOptions = {
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwZGY2MzkwMzUxN2E0YTUwNTA5ZGViOTAxZjgzODk3YyIsInN1YiI6IjYxYjZjMWVhYzk5NWVlMDA0MjUxNTdiMyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.G8KkdOspFQZuvVyHp4jQvyiYCBhqybx8TeShkqWYZT4'
   }
-  return idiomaGenero;
-}
+};
 
-// OBTENER EL GENERO DE LAS PELICULAS, EN INGLES O ESPAÑOL
-// RETORNA UN ARRAY, PARA PODER HACER LAS REFERENCIAS AL OBTENER LAS PELICULAS
-// LAS PELICULAS SOLO TRAEN EL ID DEL GENERO, PERO NO EL NOMBRE
+// OBTENER EL GENERO DE LAS PELICULAS
+// Retorna un array, para poder hacer las referencias al obtener las peliculas
+// Las peliculas solo tienen el ID del genero, pero no el nombre
 async function obtenerGeneros() {
-  const generoPeliculaOptions = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwZGY2MzkwMzUxN2E0YTUwNTA5ZGViOTAxZjgzODk3YyIsInN1YiI6IjYxYjZjMWVhYzk5NWVlMDA0MjUxNTdiMyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.G8KkdOspFQZuvVyHp4jQvyiYCBhqybx8TeShkqWYZT4'
-    }
-  };
-
+  var idioma = document.getElementById("idioma").value;
   try {
-    const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?language=${idiomaGenero()}`, generoPeliculaOptions);
+    const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?language=${idioma}`, apiOptions);
     const data = await response.json();
     return data.genres;
   } catch (error) {
@@ -39,20 +26,19 @@ async function obtenerGeneros() {
 
 // OBTENER PELICULAS POPULARES
 async function obtenerPeliculasPopulares() {
-  const popularMoviesOptions = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwZGY2MzkwMzUxN2E0YTUwNTA5ZGViOTAxZjgzODk3YyIsInN1YiI6IjYxYjZjMWVhYzk5NWVlMDA0MjUxNTdiMyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.G8KkdOspFQZuvVyHp4jQvyiYCBhqybx8TeShkqWYZT4'
-    }
-  };
+  // Eliminar peliculas anteriores
+  var contenedorPeliculas = document.getElementById("contenedorPeliculas");
+  while (contenedorPeliculas.firstChild) {
+    contenedorPeliculas.removeChild(contenedorPeliculas.firstChild);
+  }
 
-  var idiomaPelis = document.getElementById("idioma").value;
+  var idioma = document.getElementById("idioma").value;
   var pagina = 1;
+
   try {
     const nombreGeneros = await obtenerGeneros();
 
-    const response = await fetch(`https://api.themoviedb.org/3/movie/popular?language=${idiomaPelis}&page=${pagina}`, popularMoviesOptions);
+    const response = await fetch(`https://api.themoviedb.org/3/movie/popular?language=${idioma}&page=${pagina}`, apiOptions);
     const responseData = await response.json();
 
     const popularMovies = responseData.results.map(movie => {
@@ -105,3 +91,16 @@ function mostrarPeliculas(popularMovies) {
     contenedorPeliculas.appendChild(card);
   });
 }
+
+[
+  {
+    "iso_639_1": "xx",
+    "english_name": "No Language",
+    "name": "No Language"
+  },
+  {
+    "iso_639_1": "aa",
+    "english_name": "Afar",
+    "name": ""
+  }
+]

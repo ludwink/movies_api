@@ -23,8 +23,16 @@ body {
   padding-top: 70px;
 }
 
+h3,
+h4,
 p {
   font-size: var(--text-size);
+}
+
+h2 {
+  font-family: var(--title-font);
+  font-weight: 550;
+  letter-spacing: 10;
 }
 
 .logo a {
@@ -57,6 +65,17 @@ nav {
 button {
   background-color: var(--secondary-bg-color);
   padding: 5px;
+  border: transparent;
+  font-size: 1.5rem;
+  border-radius: 20px;
+  padding: 5px 15px;
+  font-weight: 500;
+}
+
+button:hover {
+  background-color: var(--primary-color);
+  color: var(--primary-bg-color);
+  font-weight: 510;
 }
 
 .contenedorPeliculas {
@@ -65,6 +84,10 @@ button {
 }
 
 .card {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+
   position: relative;
   flex: 1 1 calc(20% - 20px);
   margin: 10px;
@@ -72,10 +95,6 @@ button {
   flex-direction: column;
   overflow: hidden;
   height: 400px;
-
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
 }
 
 .overlay {
@@ -83,10 +102,16 @@ button {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 20px;
+  background-image: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 1),
+    rgba(0, 0, 0, 0.9),
+    rgba(0, 0, 0, 0.3)
+  );
+  padding: 15px;
   opacity: 0;
   transition: opacity 0.3s ease;
+  border-radius: 20px 20px 0 0;
 }
 
 .card:hover .overlay {
@@ -96,7 +121,10 @@ button {
 /* Estilos para telefonos */
 @media (max-width: 768px) {
   .card {
-    flex: 1 1 calc(50% - 20px);
+    flex: 1 1 calc(40% - 20px);
+  }
+  .overlay {
+    height: 100%;
   }
 }
 
@@ -104,5 +132,9 @@ button {
 @media screen and (min-width: 768px) and (max-width: 1024px) {
   .card {
     flex: 1 1 calc(25% - 20px);
+  }
+
+  .overlay {
+    height: 100%;
   }
 }
