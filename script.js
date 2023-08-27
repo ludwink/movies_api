@@ -65,12 +65,41 @@ async function obtenerPeliculasPopulares() {
       };
     });
 
-    console.log(popularMovies);
+    mostrarPeliculas(popularMovies);
   } catch (error) {
     console.error(error);
   }
 }
 
-function test() {
-  return console.log(obtenerGeneros());
+// MOSTRAR LAS PELICULAS EN EL HTML
+function mostrarPeliculas(popularMovies) {
+  const contenedorPeliculas = document.querySelector('.contenedorPeliculas');
+
+  popularMovies.forEach(movie => {
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const title = document.createElement('h2');
+    title.textContent = movie.title;
+    card.appendChild(title);
+
+    const releaseDate = document.createElement('h3');
+    releaseDate.textContent = `Fecha estreno: ${movie.release_date}`;
+    card.appendChild(releaseDate);
+
+    const genreNames = document.createElement('h4');
+    genreNames.textContent = `Género: ${movie.genre_names.join(', ')}`;
+    card.appendChild(genreNames);
+
+    const overview = document.createElement('p');
+    overview.textContent = movie.overview;
+    card.appendChild(overview);
+
+    const posterPath = document.createElement('img');
+    posterPath.src = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`;
+    posterPath.alt = movie.title;
+    card.appendChild(posterPath);
+
+    contenedorPeliculas.appendChild(card);
+  });
 }

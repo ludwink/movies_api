@@ -19,6 +19,7 @@
   margin: 0;
   box-sizing: border-box;
   font-family: var(--text-font);
+  color: white;
 }
 
 body {
@@ -55,4 +56,22 @@ nav {
   background-color: rgba(0, 0, 0, 0.3);
   width: 100%;
   z-index: 1;
+}
+
+#idioma {
+  color: black;
+}
+
+button {
+  color: black;
+}
+
+.card {
+  height: 400px;
+  width: 300px;
+}
+
+.poster_path {
+  height: 250px;
+  width: 200px;
 }
