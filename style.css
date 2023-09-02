@@ -126,8 +126,28 @@ button:hover {
 
 /* Estilos para telefonos */
 @media (max-width: 768px) {
+  body {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
+  nav {
+    top: auto;
+    bottom: 0; /* Mueve el nav a la parte inferior */
+    justify-content: space-between;
+  }
+
+  nav h2 {
+    display: none;
+  }
+
+  nav select {
+    display: none;
+  }
   .card {
-    flex: 1 1 calc(40% - 20px);
+    flex: 1 1 calc(90% - 20px);
+    height: 550px;
+    background-size: contain;
   }
   .overlay {
     height: 100%;
@@ -137,7 +157,7 @@ button:hover {
 /* Estilos para tablet */
 @media screen and (min-width: 768px) and (max-width: 1024px) {
   .card {
-    flex: 1 1 calc(25% - 20px);
+    flex: 1 1 calc(30% - 20px);
   }
   .overlay {
     height: 100%;
