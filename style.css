@@ -51,7 +51,7 @@ nav {
   z-index: 1;
 }
 
-#idioma {
+.selected-box {
   background-color: var(--secondary-bg-color);
   padding: 5px;
   border: var(--primary-color) 2px solid;

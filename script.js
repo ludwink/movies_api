@@ -8,7 +8,7 @@ const apiOptions = {
   }
 };
 
-// OBTENER LENGUAJES
+// OBTENER IDIOMAS
 const opcionesIdioma = document.getElementById('idioma');
 const usuarioIdioma = navigator.language.split('-')[0];
 
@@ -16,6 +16,7 @@ fetch('https://api.themoviedb.org/3/configuration/languages', apiOptions)
   .then(response => response.json())
   .then(languages => {
     languages.forEach(language => {
+      // Mostrar listado de Idiomas
       const option = document.createElement('option');
       option.value = language.iso_639_1;
       option.textContent = language.english_name || language.name;
@@ -25,6 +26,8 @@ fetch('https://api.themoviedb.org/3/configuration/languages', apiOptions)
         option.selected = true;
       }
       opcionesIdioma.appendChild(option);
+
+
     });
   })
   .catch(err => console.error(err));
@@ -32,17 +35,32 @@ fetch('https://api.themoviedb.org/3/configuration/languages', apiOptions)
 // OBTENER EL GENERO DE LAS PELICULAS
 // Retorna un array, para poder hacer las referencias al obtener las peliculas
 // Las peliculas solo tienen el ID del genero, pero no el nombre
+const opcionesGeneros = document.getElementById('generos');
 async function obtenerGeneros() {
+  // Limpiar generos cargados anteriormente
+  var selectElement = document.getElementById('generos');
+  selectElement.innerHTML = '';
+
   var idioma = document.getElementById("idioma").value;
   try {
     const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?language=${idioma}`, apiOptions);
     const data = await response.json();
+    // Llenar el listado de opciones
+    data.genres.forEach(generos => {
+      const option = document.createElement('option');
+      option.value = generos.id;
+      option.textContent = generos.name || "Error";
+      opcionesGeneros.appendChild(option);
+    });
     return data.genres;
   } catch (error) {
     console.error(error);
     return [];
   }
 }
+
+// CARGAR PELICULAS AL INICIO
+obtenerPeliculasPopulares("inicio");
 
 // OBTENER PELICULAS POPULARES
 var pagina = 1;
@@ -87,8 +105,46 @@ async function obtenerPeliculasPopulares(accion) {
   }
 }
 
-// CARGAR PELICULAS AL INICIO
-obtenerPeliculasPopulares("inicio");
+// Cambiar peliculas al seleccionar un genero o idioma
+generos.addEventListener('change', () => {
+  const generoSeleccionado = generos.value;
+  //alert(generoSeleccionado);
+  peliculasPorGenero(generoSeleccionado);
+});
+
+idioma.addEventListener('change', () => {
+  obtenerPeliculasPopulares("inicio");
+  opcionesGeneros();
+});
+
+async function peliculasPorGenero(generoSeleccionado = '') {
+  // Eliminar peliculas anteriores
+  var contenedorPeliculas = document.getElementById("contenedorPeliculas");
+  while (contenedorPeliculas.firstChild) {
+    contenedorPeliculas.removeChild(contenedorPeliculas.firstChild);
+  }
+
+  try {
+    const nombreGeneros = await obtenerGeneros();
+    var idioma = document.getElementById("idioma").value;
+
+    const response = await fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=${idioma}&page=1&sort_by=popularity.desc&with_genres=${generoSeleccionado}`, apiOptions);
+    const responseData = await response.json();
+    const popularMovies = responseData.results.map(movie => {
+      const genreNames = movie.genre_ids.map(genreId => {
+        const genre = nombreGeneros.find(genre => genre.id === genreId);
+        return genre ? genre.name : "Desconocido";
+      });
+      return {
+        ...movie,
+        genre_names: genreNames
+      };
+    });
+    mostrarPeliculas(popularMovies);
+  } catch (error) {
+    console.error('ERROR PELICUAS POR GENERO: ', error);
+  }
+}
 
 // MOSTRAR LAS PELICULAS EN EL HTML
 function mostrarPeliculas(popularMovies) {
