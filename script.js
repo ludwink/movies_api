@@ -1,4 +1,5 @@
 
+// INTERACCIONES API
 // OPTIONS DE LA API
 const apiOptions = {
   method: 'GET',
@@ -9,34 +10,48 @@ const apiOptions = {
 };
 
 // OBTENER IDIOMAS
-const opcionesIdioma = document.getElementById('idioma');
-const usuarioIdioma = navigator.language.split('-')[0];
+async function obtenerIdiomas() {
+  try {
+    const response = await fetch('https://api.themoviedb.org/3/configuration/languages', apiOptions);
+    if (!response.ok) {
+      throw new Error('No se pudo obtener la lista de idiomas');
+    }
+    const languages = await response.json();
+    return languages;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
 
-fetch('https://api.themoviedb.org/3/configuration/languages', apiOptions)
-  .then(response => response.json())
-  .then(languages => {
+// OBTENER GENEROS
+
+// MOSTRAR IDIOMAS EN <SELECT> HTML
+async function mostrarIdiomas() {
+  try {
+    const languages = await obtenerIdiomas();
+    const opcionesIdioma = document.getElementById('idioma');
+    const usuarioIdioma = navigator.language.split('-')[0];
+
     languages.forEach(language => {
       // Mostrar listado de Idiomas
       const option = document.createElement('option');
       option.value = language.iso_639_1;
       option.textContent = language.english_name || language.name;
-
       // Selecciona la opción del idioma del sistema
       if (language.iso_639_1 === usuarioIdioma) {
         option.selected = true;
       }
       opcionesIdioma.appendChild(option);
-
-
     });
-  })
-  .catch(err => console.error(err));
+  } catch (err) {
+    console.error("ERROR AL MOSTRAR EL LISTADO DE IDIOMAS" + err);
+  }
+}
 
-// OBTENER EL GENERO DE LAS PELICULAS
-// Retorna un array, para poder hacer las referencias al obtener las peliculas
-// Las peliculas solo tienen el ID del genero, pero no el nombre
-const opcionesGeneros = document.getElementById('generos');
+// MOSTRAR GENEROS EN <SELECT> HTML
 async function obtenerGeneros() {
+  const opcionesGeneros = document.getElementById('generos');
   // Limpiar generos cargados anteriormente
   var selectElement = document.getElementById('generos');
   selectElement.innerHTML = '';
@@ -60,6 +75,7 @@ async function obtenerGeneros() {
 }
 
 // CARGAR PELICULAS AL INICIO
+mostrarIdiomas();
 obtenerPeliculasPopulares("inicio");
 
 // OBTENER PELICULAS POPULARES
@@ -108,7 +124,7 @@ async function obtenerPeliculasPopulares(accion) {
 // Cambiar peliculas al seleccionar un genero o idioma
 generos.addEventListener('change', () => {
   const generoSeleccionado = generos.value;
-  //alert(generoSeleccionado);
+  generoSeleccionado.selected;
   peliculasPorGenero(generoSeleccionado);
 });
 
