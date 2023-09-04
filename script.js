@@ -25,6 +25,34 @@ async function obtenerIdiomas() {
 }
 
 // OBTENER GENEROS
+async function obtenerGeneros() {
+  var idioma = document.getElementById("idioma").value;
+  try {
+    const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?language=${idioma}`, apiOptions);
+    if (!response.ok) {
+      throw new Error("No se pudo obtener la lista de generos");
+    }
+    const data = await response.json();
+    return data.genres;
+  } catch (err) {
+    console.log("ERROR: " + err);
+    throw err;
+  }
+}
+
+async function obtenerPeliculasPorGenero(pagina) {
+  var idioma = document.getElementById("idioma").value;
+  var genero = document.getElementById("generos").value;
+
+  try {
+    const response = await fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=${idioma}&page=${pagina}&sort_by=popularity.desc&with_genres=${genero}`, apiOptions);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.log("ERRPR AL OBTENER LAS PELICULAS POR GENERO" + err);
+    throw err;
+  }
+}
 
 // MOSTRAR IDIOMAS EN <SELECT> HTML
 async function mostrarIdiomas() {
@@ -37,7 +65,7 @@ async function mostrarIdiomas() {
       // Mostrar listado de Idiomas
       const option = document.createElement('option');
       option.value = language.iso_639_1;
-      option.textContent = language.english_name || language.name;
+      option.textContent = (language.name) ? `${language.english_name} - ${language.name}` : language.english_name;
       // Selecciona la opción del idioma del sistema
       if (language.iso_639_1 === usuarioIdioma) {
         option.selected = true;
@@ -45,42 +73,30 @@ async function mostrarIdiomas() {
       opcionesIdioma.appendChild(option);
     });
   } catch (err) {
-    console.error("ERROR AL MOSTRAR EL LISTADO DE IDIOMAS" + err);
+    console.error("ERROR AL MOSTRAR IDIOMAS" + err);
   }
 }
 
 // MOSTRAR GENEROS EN <SELECT> HTML
-async function obtenerGeneros() {
-  const opcionesGeneros = document.getElementById('generos');
-  // Limpiar generos cargados anteriormente
-  var selectElement = document.getElementById('generos');
-  selectElement.innerHTML = '';
-
-  var idioma = document.getElementById("idioma").value;
+async function mostrarGeneros() {
   try {
-    const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?language=${idioma}`, apiOptions);
-    const data = await response.json();
-    // Llenar el listado de opciones
-    data.genres.forEach(generos => {
+    const selectGeneros = document.getElementById('generos');
+    const generos = await obtenerGeneros();
+
+    generos.forEach(genero => {
       const option = document.createElement('option');
-      option.value = generos.id;
-      option.textContent = generos.name || "Error";
-      opcionesGeneros.appendChild(option);
+      option.value = genero.id;
+      option.textContent = genero.name || "Not Found";
+      selectGeneros.appendChild(option);
     });
-    return data.genres;
+
   } catch (error) {
-    console.error(error);
-    return [];
+    console.error("ERROR AL MOSTRAR GENEROS: " + error);
   }
 }
 
-// CARGAR PELICULAS AL INICIO
-mostrarIdiomas();
-obtenerPeliculasPopulares("inicio");
-
-// OBTENER PELICULAS POPULARES
-var pagina = 1;
-async function obtenerPeliculasPopulares(accion) {
+async function mostrarPeliculasPorGenero(accion) {
+  // Paginacion
   if (accion === "inicio") {
     pagina = 1;
   } else if (accion === "siguiente") {
@@ -88,7 +104,7 @@ async function obtenerPeliculasPopulares(accion) {
   } else if (accion === "anterior" && pagina > 1) {
     pagina--;
   } else {
-    console.error("Acción no válida");
+    console.error("ERROR AL ENVIAR EL NUMERO DE PAGINA, ACCION NO VALIDA");
     return;
   }
 
@@ -100,11 +116,10 @@ async function obtenerPeliculasPopulares(accion) {
 
   try {
     const nombreGeneros = await obtenerGeneros();
-    var idioma = document.getElementById("idioma").value;
-    const response = await fetch(`https://api.themoviedb.org/3/movie/popular?language=${idioma}&page=${pagina}`, apiOptions);
-    const responseData = await response.json();
+    const peliculas = await obtenerPeliculasPorGenero(pagina);
 
-    const popularMovies = responseData.results.map(movie => {
+    // Agregar nombre del genero en lugar del ID
+    const peliculasConGenero = peliculas.results.map(movie => {
       const genreNames = movie.genre_ids.map(genreId => {
         const genre = nombreGeneros.find(genre => genre.id === genreId);
         return genre ? genre.name : "Desconocido";
@@ -114,59 +129,18 @@ async function obtenerPeliculasPopulares(accion) {
         genre_names: genreNames
       };
     });
+    mostrarPeliculas(peliculasConGenero);
 
-    mostrarPeliculas(popularMovies);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// Cambiar peliculas al seleccionar un genero o idioma
-generos.addEventListener('change', () => {
-  const generoSeleccionado = generos.value;
-  generoSeleccionado.selected;
-  peliculasPorGenero(generoSeleccionado);
-});
-
-idioma.addEventListener('change', () => {
-  obtenerPeliculasPopulares("inicio");
-  opcionesGeneros();
-});
-
-async function peliculasPorGenero(generoSeleccionado = '') {
-  // Eliminar peliculas anteriores
-  var contenedorPeliculas = document.getElementById("contenedorPeliculas");
-  while (contenedorPeliculas.firstChild) {
-    contenedorPeliculas.removeChild(contenedorPeliculas.firstChild);
-  }
-
-  try {
-    const nombreGeneros = await obtenerGeneros();
-    var idioma = document.getElementById("idioma").value;
-
-    const response = await fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=${idioma}&page=1&sort_by=popularity.desc&with_genres=${generoSeleccionado}`, apiOptions);
-    const responseData = await response.json();
-    const popularMovies = responseData.results.map(movie => {
-      const genreNames = movie.genre_ids.map(genreId => {
-        const genre = nombreGeneros.find(genre => genre.id === genreId);
-        return genre ? genre.name : "Desconocido";
-      });
-      return {
-        ...movie,
-        genre_names: genreNames
-      };
-    });
-    mostrarPeliculas(popularMovies);
   } catch (error) {
     console.error('ERROR PELICUAS POR GENERO: ', error);
   }
 }
 
 // MOSTRAR LAS PELICULAS EN EL HTML
-function mostrarPeliculas(popularMovies) {
+function mostrarPeliculas(peliculas) {
   const contenedorPeliculas = document.querySelector('.contenedorPeliculas');
 
-  popularMovies.forEach(movie => {
+  peliculas.forEach(movie => {
     const card = document.createElement('div');
     card.className = 'card';
     card.style.backgroundImage = `url('https://image.tmdb.org/t/p/w500/${movie.poster_path}')`;
@@ -195,3 +169,22 @@ function mostrarPeliculas(popularMovies) {
     contenedorPeliculas.appendChild(card);
   });
 }
+
+// CARGAR IDIOMAS, GENEROS Y PELICULAS AL INICIO, EN ESE ORDEN
+mostrarIdiomas().then(() => mostrarGeneros()).then(() => mostrarPeliculasPorGenero('inicio'));
+
+// CAMBIAR PELICULAS AL SELECCIONAR GENERO
+generos.addEventListener('change', () => {
+  mostrarPeliculasPorGenero("inicio");
+});
+
+// CAMBIAR PELICULAS AL SELECCIONAR IDIOMA
+idioma.addEventListener('change', () => {
+  // Limpiar generos cargados anteriormente
+  var selectElement = document.getElementById('generos');
+  selectElement.innerHTML = '';
+  // --------------------------------------
+
+  mostrarGeneros();
+  mostrarPeliculasPorGenero("inicio");
+});
